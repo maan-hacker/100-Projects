@@ -2,250 +2,13 @@
 #include <windows.h>
 #include <cstdlib>
 #include <ctime>
+#include "Player.cpp"
+#include "Monster.cpp"
 using namespace std;
 
 
-class Player {       // Class of Player
-	private:
-		string name;
-		int health;
-		int level;
-		int experience;
-		int potions;
-		string location;
-		string weapon;
-		int weaponDamage;
-		int coins;
-		
-		
-	public:
-		int battlesWon;
-		
-		// Member Function to create a player
-		void createPlayer() {
-			cout << "Enter Your character name: ";
-			cin >> name;
-			
-			health = 100;
-			level = 1;
-			experience = 0;
-			potions = 2;
-			
-			coins = 50;
-			weapon = "Rusty Sword";
-			weaponDamage = 5;
-			
-
-			
-			battlesWon = 0;
-			location = "Village";
-			
-		}
-		
-		
-		// Member Function to show stats of a player
-		void showStats() {
-			cout << "\n---- PLAYER STATS ----\n";
-			cout << "Name: " << name << endl;
-			cout << "Health: " << health << endl;
-			cout << "Level: " << level << endl;
-			cout << "Experience: " << experience << endl;
-			cout << "Potions: " << potions << endl;
-			cout << "Weapon: " << weapon << endl;
-			cout << "Location: " << location << endl;
-			cout << "Coins: " << coins << endl;
-		}
-		
-		
-		// Player Attack damage
-		int getAttack() {
-			return 10 + (level * 5) + weaponDamage;
-		}
-		
-		// Damage that reduces player's hp
-		void takeDamage(int dmg) {
-			health = health - dmg;
-			
-			if (health < 0) health = 0;
-		}
-		
-		// To know if the player is alive
-		bool isAlive() {
-			return health > 0;
-		}
-		
-		// To display the health
-		int getHealth() 
-		{
-			return health;
-		}
-		
-		// Member Function to gain Experience
-		void gainExperience(int exp)
-		{
-			experience += exp;
-			
-			if(experience >= 100) 
-			{
-				level++;
-				experience = 0;
-				
-				cout << "\n*** LEVEL UP! ***\n";
-				cout << "You are now level " << level << endl;
-				
-				health = 100 + (level * 20);
-				
-					
-			}
-		}
-		
-		// Member function for the potion use of player
-		void usePotion() 
-		{
-			if (potions > 0) 
-			{
-				potions--;
-				health += 40;
-				
-				if (health > 100 + level*20)
-					health = 100 + level*20;
-					
-				cout << "You used a potion. Health restored!\n";
-			}
-			else
-			{
-				cout << "No potions left!\n";
-			}
-		}
-		
-		// Member Function to add Potion
-		void addPotion() 
-		{
-			potions++;
-		}
-		
-		// To display Potions in fight
-		int getPotion() {
-			return potions;
-		}
-		
-		// Member Function to decide the player travel
-		void travel() 
-		{
-			int choice;
-			
-			cout << "\nWhere do you want to go?\n";
-			cout << "1. Forest\n";
-			cout << "2. Dungeon\n";
-			cout << "3. Village\n";
-			
-			cin >> choice;
-			
-			if (choice == 1)
-				location = "Forest";
-			else if (choice == 2)
-				location = "Dungeon";
-			else 
-				location = "Village";
-				
-			cout << "You travel to the " << location << ".\n";
-		}
-		
-		
-		// Member Function to display location
-		string getLocation()
-		{
-			return location;
-		}
-		
-		// Member Function to find Weapon for the player 
-		friend void findWeapon(Player &player);
-		
-		// Member Function for coins for the player
-		void addCoins(int amount)
-		{
-			coins += amount;
-		}
-		
-		// Member Functions checks if purchase is possible and then returns the boolean value
-		bool spendCoins (int amount) 
-		{
-			if (coins >= amount)
-			{
-				coins -= amount;
-				return true;
-			}
-			
-			return false;
-		}
-		
-	
-};
 
 
-class Monster {      // Class of Monster
-	private: 
-		string type;
-		int health;
-		int attack;
-		
-	public:
-		
-		// Member Function to generate monster
-		void generateMonster() {
-			int r = rand()  % 3;
-			
-			if (r == 0) {
-				type = "Goblin";
-				health = 40;
-				attack = 8;
-			} 
-			else if (r == 1){
-				type = "Orc";
-				health = 60;
-				attack = 12;
-			}
-			else {
-				type = "Dragon";
-				health = 100;
-				attack = 20;
-			}
-		}
-		
-		// Member Function to spawn monster
-		void showMonster() {
-			
-			cout << "\nA wild " << type << " appears!\n";
-			cout << "Health: " << health << endl;
-			cout << "Attack: " << attack << endl;
-		}
-		
-		
-		// Monster Attack damage
-		int getAttack() 
-		{
-			return attack;
-		}
-		
-		// Damage that reduces monster's hp
-		void takeDamage(int dmg) 
-		{
-			health = health - dmg;
-			
-			if (health < 0) health = 0;
-		}
-		
-		// To know if the monster is alive
-		bool isAlive() 
-		{
-			return health > 0;
-		}
-		
-		// To display the health
-		int gethealth()  {
-			return health;
-		}
-};
 
 class Boss {         // Class of Boss
 	private:
@@ -324,30 +87,6 @@ void explore (Player &player)
 }
 
 
-// Function for Weapon Discovery
-void findWeapon(Player &player)
-{
-	int roll = rand() % 3;
-	
-	if (roll == 0)
-	{
-		cout << "You found an Iron Sword!\n";
-		player.weapon = "Iron Sword";
-		player.weaponDamage = 10;
-	}
-	else if (roll == 1)
-	{
-		cout << "You found a Steel Blade!\n";
-		player.weapon = "Steel Blade";
-		player.weaponDamage = 15;
-	}
-	else 
-	{
-		cout << "You found a Legendary Sword!\n";
-		player.weapon = "legendary Sword";
-		player.weaponDamage = 25;
-	}
-}
 
 
 
@@ -399,6 +138,29 @@ void shop( Player &player)
 	
 }
 
+
+// Function to show Health Bar
+void showHealthBar (int current, int maximum)
+		{
+			int barWidth = 20;
+			
+			// Safety check (important in real progress
+			if (maximum <= 0) maximum = 1;
+			
+			int filled = (current * barWidth) / maximum;
+			
+			cout << "[";
+			
+			for (int i = 0; i< filled; i++)
+				cout << (char)219;            // filled block
+			
+			for (int i = filled; i < barWidth; i++)
+				cout << (char)176;            // empty block
+				
+			cout << "]";
+			cout << current << "/" << maximum << endl;
+		}
+		
 
 int main() {
 	system("color 0A");  
@@ -472,11 +234,13 @@ void battle (Player &player)
 	while (player.isAlive() && monster.isAlive())    // Fight Loop
 	{
 		
-		cout << "\n------------------------";
-		cout << "\nYour Health: " << player.getHealth();
-		cout << "\nMonster Health: " << monster.gethealth();
+		cout << "\n===== BATTLE TURN =====";
+		cout << "\nYour Health: " ;
+		showHealthBar(player.getHealth(), player.getMaxHealth());
+		cout << "\nMonster Health: ";
+		showHealthBar(monster.getHealth(), monster.getMaxHealth());             
 		cout << "\nPotions: " << player.getPotion();
-		cout << "\n------------------------";
+		cout << "\n=======================";
 		cout << "\n1. Attack\n";
 		cout << "2. Use Potion\n";
 		
@@ -599,8 +363,9 @@ void bossBattle (Player &player)
 	{
 		
 		cout << "\n------------------------";
-		cout << "\nYour Health: " << player.getHealth();
-		cout << "\nMonster Health: " << boss.getHealth();
+		cout << "\nYour Health: " ;
+		showHealthBar(player.getHealth(), player.getMaxHealth());
+
 		cout << "\nPotions: " << player.getPotion();
 		cout << "\n------------------------";
 		cout << "\n1. Attack\n";
