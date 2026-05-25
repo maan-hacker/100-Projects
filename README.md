@@ -21,7 +21,7 @@ We are aiming to add 100 files of code of C++ language in this repository. I hop
 C++
 
 
-## FileSystem Project
+# FileSystem Project
 This projects contains the following concepts:
 - Polymorphism
 - Inheritance
@@ -29,12 +29,11 @@ This projects contains the following concepts:
 - Filesystem
 - File Handling
 
-# Technologies Used:
+# #Technologies Used:
 - git
 - github
 - C++
 
-- 
 
 #Author  
 Muhammad Usman
