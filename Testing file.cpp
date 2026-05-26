@@ -49,7 +49,7 @@ class FileItem : public FileSystemItem {
 			}
 		}
 		
-		void createFile() {
+		void createFile() {           // To create File. 
 			std::ofstream file(path);
 			
 			file.close();
@@ -57,7 +57,70 @@ class FileItem : public FileSystemItem {
 			std::cout << "File created successfully.\n";
 		}
 		
+		void renameFile (std::string newName) {    // To rename the file. 
 		
+			if (!fs::exists(path)) {       // to check the existence of file. 
+				
+				std::cout << "File does not exists.\n";
+				
+				return;
+			}
+				
+			fs::rename( path, newName);
+			
+			std::cout << "File renamed successfully.\n";
+			
+			path = newName;
+			
+		}
+		
+		void copyFile (std::string newName) {       // To copy the file into another file.
+			
+			if (!fs::exists(path)) {             // To check existence of file
+				
+				std::cout << "File does not exists.\n";
+				
+				return;
+			}
+			
+			
+			fs::copy(path, newName); // This filesystem command copies an existing file into a new file
+			
+			std::cout << "File copied successfully.\n";
+	
+		}
+
+		void readFile() {
+			
+			if (!fs::exists(path)) {
+				
+				std::cout << "File does not exists.\n";
+				
+				return;
+			}
+			
+			
+			
+			std::fstream file(path);                // Opens the file whose name is store in the path variable
+			std::string line;                       // Variable to store the read data of the file 
+			
+			std::cout << "\n----- FILE CONTENT -----\n";
+			
+			while (getline(file, line)) {
+				
+				std::cout 
+				<< line 
+				<< std::endl;
+				
+			}
+			
+			file.close();
+			
+		}
+
+
+
+
 };
 
 // --------------------- DIRECTORY CLASS ---------------------
@@ -99,7 +162,7 @@ class DirectoryItem : public FileSystemItem {
 			}
 		}
 		
-		void showContents() {
+		void showContents() {   // To show the contents inside the directory
 			
 			std::cout 
 			<< "\n----- DIRECTORY CONTENTS -----\n";
@@ -117,6 +180,16 @@ class DirectoryItem : public FileSystemItem {
 				<< std::endl;
 			}
 		}
+		
+		void renameDirectory(std::string newName) {     // Renames the Directory. 
+			
+			fs::rename(path, newName);
+			
+			std::cout << "Directory renamed successfully.\n";
+			
+			path = newName; 
+		}
+		
 };
 
 
@@ -167,8 +240,12 @@ int main() {
 		<< "3. Show File Info\n"
 		<< "4. Show Directory Info\n"
 		<< "5. Show Directory Contents\n"
-		<< "6. Show History\n"
-		<< "7. Exit\n"
+		<< "6. Rename File\n"
+		<< "7. Rename Directory\n"
+		<< "8. Copy File\n"
+		<< "9. Read File\n"
+		<< "10. Show History\n"
+		<< "11. Exit\n"
 		<< "\nEnter Choice: ";
 		
 		
@@ -247,12 +324,104 @@ int main() {
 			}
 			
 			case 6: {
-				manager.showHistory();
+				
+				std::string oldFile;
+				std::string newFile;
+				
+				std::cout << "Enter current file name: ";
+				std::cin >> oldFile;
+				
+				std::cout << "Enter new file name: ";
+				std::cin >> newFile;
+				
+				FileItem file (oldFile);
+				
+				file.renameFile(newFile);
+			
+				manager.addHistory(
+					"Renamed File: " + oldFile + " to " + newFile
+				);
+				
 				
 				break;
 			}
 			
 			case 7: {
+				
+				std::string oldFolder;
+				std::string newFolder;
+				
+				std::cout << "Enter current directory name: ";
+				std::cin >> oldFolder;
+				
+				std::cout << "Enter new directory name: ";
+				std::cin >> newFolder;
+				
+				DirectoryItem dir(oldFolder);
+				dir.renameDirectory(newFolder);
+				
+				manager.addHistory(
+				"Renamed directory: " + oldFolder + " to " + newFolder
+				);
+				
+				
+				break;
+			}
+			
+			case 8: {
+				
+				std::string sourceFile;
+				std::string destinationFile;
+				
+				std::cout << "Enter source file name: ";
+				std::cin >> sourceFile;
+				
+				std::cout << "Enter desination file name: ";
+				std::cin >> destinationFile;
+				
+				FileItem file(sourceFile);          // Creates the file to be replaced
+				file.copyFile(destinationFile);     // Replaces the file 
+				
+				
+				manager.addHistory(                 // Ads the record in the vector
+					"Copied File: " + sourceFile + " to " + destinationFile
+				);
+				
+				
+				
+				break;
+			}
+			
+			case 9: {
+				
+				  // To read file name from user.
+				std::string filename;          
+				std::cout << "Enter file name: ";
+				std::cin >> filename; 
+				
+				
+				
+				 // Creates an object & reades it. 
+				FileItem file(filename);
+				file.readFile();
+				
+				
+				
+				//  Adds record in the vector
+				manager.addHistory(
+					"Read file: " + filename
+				);
+				
+				break;
+			}
+			
+			case 10: {
+				manager.showHistory();
+				
+				break;
+			}
+			
+			case 11: {
 				std::cout << "Program Closed.\n";
 				
 				break;
@@ -262,7 +431,7 @@ int main() {
 			
 				std::cout << "Invalid Choice.\n";
 		}
-	} while (choice != 7);
+	} while (choice != 11);
 	
 	return 0;
 }
