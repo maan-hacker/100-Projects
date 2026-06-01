@@ -118,8 +118,59 @@ class FileItem : public FileSystemItem {
 			
 		}
 
+		void writeFile() {                       // Writes to file after checking file opening and than writing what the user has given the input
+			
+			std::ofstream file(path, std::ios::app);
+			if (!file.open()) {                  // File opening verification
+				
+				std::cout << "Could not open file.\n";  
+				return;
+			}
+			
+			std::string text;
+			std::cin.ignore();
+			std::cout << "Enter text: ";
+			std::getline(cin, text);
+			
+			file << text << std::endl;
+			file.close();
+			std::cout << "Text written successfully.\n";
+			
+		}
+		
+		void deleteFile() {                       // Deletes the file or in other words, the path entered.
+			
+			if (!fs::exists(path)) {
+				
+				std::cout << "File does not exist.\n";
+				return;
+			}
+			
+			fs::remove(path);
+			std::cout << "File deleted.\n";
+		}
 
+		void showExtension() {                    // Shows the file's extension
+			
+			std::cout 
+			<< "Extension:  " << fs::path(path).extension() << std::endl;
+		}
 
+		void countFiles() {                       // Beaviour to count fils.
+			
+			int count = 0;
+			
+			for (const auto& item : fs::directory_iterator(path)) {  // loop for counting
+				
+				if (fs::is_regular_file(item)) {                     // if-condition to count files only
+					
+					count++;
+				}
+			}
+			
+			std::cout 
+			<<  "Total files: " << count << std::endl;
+		}
 
 };
 
