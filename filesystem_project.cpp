@@ -171,6 +171,26 @@ class FileItem : public FileSystemItem {
 			std::cout 
 			<<  "Total files: " << count << std::endl;
 		}
+		
+		void showAllContents() {                  // To show All contents
+			
+			for (const auto& item: fs::recursive_directory_item(path)) {
+				
+				std::cout << item.path() << std::endl;
+			}
+		}
+		
+		
+		void findTxtFiles()  {                   // To list .txt Files
+			
+			for (const auto& item : fs::recursive_directory_iterator(path)) {
+				
+				std::cout << item.path() << std::endl;
+			}
+		}
+
+
+
 
 };
 
